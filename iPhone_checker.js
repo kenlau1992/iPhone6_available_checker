@@ -78,9 +78,18 @@ function start(timeInt, phone_model, color, cap, store)
 			url: loc,
 			data: 'json'
 		}).done(function(data){
-			// print the available item
-			print_avail_avail(data, store, target);
-		})
+			// empty json as the store has closed
+			if(jQuery.isEmptyObject(data) == true)
+			{
+				console.log("The store had been closed");
+				return;
+			}
+			else
+				// print the available item
+				print_avail_avail(data, store, target);
+		}).fail(function(data){
+			console.log("The store had been closed");
+		});
 	
 	}, timeInt * 1000);
 
@@ -111,8 +120,7 @@ function filter_model(phone_model, color, cap)
 	{
 		case 'grey':
 			for(var i = target.length-2; i > 0; i-=3)
-			{console.log(i)
-				target.splice(i, 2);}
+				target.splice(i, 2);
 			break;
 		case 'silver':
 			for(var i = target.length-1; i > 0; i-=3)
@@ -168,7 +176,7 @@ function filter_model(phone_model, color, cap)
 // print the available iPhones at particular store
 function print_avail_avail(ret_json, store, target)
 {
-	for(var j = 0; len_j = store.length; j < len_j; j++)
+	for(var j = 0, len_j = store.length; j < len_j; j++)
 	{
 		var store_code = stores[store[j]];
 		var store_item = ret_json[store_code];
