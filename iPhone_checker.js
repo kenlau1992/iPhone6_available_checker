@@ -65,31 +65,21 @@ function start(timeInt, phone_model, color, cap, store)
 		case 'ifc':
 		case 'cb':
 		case 'fw':
+			store = [store];
 			break;
 		default:
-			store = null;
+			store = ['ifc', 'cb', 'fw'];
 	}
 	// to get the modle user want
 	var target = filter_model(phone_model, color, cap);
 	
 	setInterval(function(){
 		$.ajax({
-			url: loc
+			url: loc,
+			data: 'json'
 		}).done(function(data){
-			var ret = JSON.parse(data);
-
-			// user do not specify the store he/she is looking for
-			// so the script will look up all the store
-			if(store == null)
-			{
-				print_avail_avail(ret, 'fw', target);
-				print_avail_avail(ret, 'ifc', target);
-				print_avail_avail(ret, 'cb', target);
-			}
-			else	// specified store
-			{
-				print_avail_avail(ret, stores[store], target);
-			}
+			// print the available item
+			print_avail_avail(data, store, target);
 		})
 	
 	}, timeInt * 1000);
@@ -146,18 +136,18 @@ function filter_model(phone_model, color, cap)
 	{
 		case 16:
 			for(var i = 0, len = cap16.length; i < len; i++)
-					if(target.indexOf(cap16[i]) != -1)
-						final_target.push(cap16[i]);
+				if(target.indexOf(cap16[i]) != -1)
+					final_target.push(cap16[i]);
 			break;
 		case 64:
 			for(var i = 0, len = cap64.length; i < len; i++)
-					if(target.indexOf(cap64[i]) != -1)
-						final_target.push(cap64[i]);
+				if(target.indexOf(cap64[i]) != -1)
+					final_target.push(cap64[i]);
 			break;
 		case 128:
 			for(var i = 0, len = cap128.length; i < len; i++)
-					if(target.indexOf(cap128[i]) != -1)
-						final_target.push(cap128[i]);
+				if(target.indexOf(cap128[i]) != -1)
+					final_target.push(cap128[i]);
 			break;
 		default:
 			// user didn't specify the capacity
@@ -176,10 +166,17 @@ function filter_model(phone_model, color, cap)
 }
 
 // print the available iPhones at particular store
-function print_avail_avail(ret_json, store_code, target)
+function print_avail_avail(ret_json, store, target)
 {
-	var store_item = ret_json[store_code];
-	for(var i = 0, len = target.length; i < len; i++)
-		if(store_item[target[i]] == true)
-			console.log('Available model: ' + models_name[target[i]] + ' @ ' + stores_name[store_code]);
+	for(var j = 0; len_j = store.length; j < len_j; j++)
+	{
+		var store_code = stores[store[j]];
+		var store_item = ret_json[store_code];
+
+		for(var i = 0, len = target.length; i < len; i++)
+		{
+			if(store_item[target[i]] == true)
+				console.log('Available model: ' + models_name[target[i]] + ' @ ' + stores_name[store_code]);
+		}
+	}
 }
