@@ -1,7 +1,13 @@
+/*
+	By Ken Lau
+	Doing polling to look up available iPhone in iReserve
+	Users can specify the requirments by input argument
+*/
 var debug = 1;
 // the iReserve link we will keep track
-var loc = 'https://reserve.cdn-apple.com/GB/en_GB/reserve/iPhone/availability.json';
+var loc = 'https://reserve.cdn-apple.com/HK/en_HK/reserve/iPhone/availability.json';
 // translate the key part in availability.json into more meaningful variable
+// Thank you for Jimmy Sinn to prove the mapping
 var stores = {cb: 'R409', ifc: 'R428', fw: 'R485'};
 var stores_name = {cb: 'Causeway Bay', ifc: 'IFC Mall', fw: 'Festival Walk'};
 var cap16 = ['MGA82ZP/A','MGA92ZP/A','MGAA2ZP/A','MG472ZP/A','MG482ZP/A','MG492ZP/A'];
@@ -45,7 +51,7 @@ var models_name = {
 
 
 /*
- *	timeInt: how long to check again
+ *	timeInt: how long to check again, folting point/ integer in second
  *	model: iPhone model, input: 6 or 6+ or null
  *	color: iPhone color, input: grey, silver, gold or null
  *	cap: iPhone capacity, input: 16, 64, 128
@@ -66,10 +72,32 @@ function start(timeInt, phone_model, color, cap, store)
 	// to get the modle user want
 	var target = filter_model(phone_model, color, cap);
 	
+	setInterval(function(){
+		$.ajax({
+			url: loc
+		}).done(function(data){
+			var ret = JSON.parse(data);
 
+			// user do not specify the store he/she is looking for
+			// so the script will look up all the store
+			if(store == null)
+			{
+				print_avail_avail(ret, 'fw', target);
+				print_avail_avail(ret, 'ifc', target);
+				print_avail_avail(ret, 'cb', target);
+			}
+			else	// specified store
+			{
+				print_avail_avail(ret, stores[store], target);
+			}
+		})
+	
+	}, timeInt * 1000);
 
 }
 
+// to filter out all iPhone codes not match the requirement
+// and return the array of iPhone users want to look at
 function filter_model(phone_model, color, cap)
 {
 	var target = model;
@@ -145,4 +173,13 @@ function filter_model(phone_model, color, cap)
 			console.log('model: ' + models_name[final_target[i]]);
 
 	return final_target;
+}
+
+// print the available iPhones at particular store
+function print_avail_avail(ret_json, store_code, target)
+{
+	var store_item = ret_json[store_code];
+	for(var i = 0, len = target.length; i < len; i++)
+		if(store_item[target[i]] == true)
+			console.log('Available model: ' + models_name[target[i]] + ' @ ' + stores_name[store_code]);
 }
