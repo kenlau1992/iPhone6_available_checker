@@ -9,7 +9,7 @@ var loc = 'https://reserve.cdn-apple.com/HK/en_HK/reserve/iPhone/availability.js
 // translate the key part in availability.json into more meaningful variable
 // Thank you for Jimmy Sinn to prove the mapping
 var stores = {cb: 'R409', ifc: 'R428', fw: 'R485'};
-var stores_name = {cb: 'Causeway Bay', ifc: 'IFC Mall', fw: 'Festival Walk'};
+var stores_name = {'R409': 'Causeway Bay', 'R428': 'IFC Mall', 'R485': 'Festival Walk'};
 var cap16 = ['MGA82ZP/A','MGA92ZP/A','MGAA2ZP/A','MG472ZP/A','MG482ZP/A','MG492ZP/A'];
 var cap64 = ['MGAH2ZP/A','MGAJ2ZP/A','MGAK2ZP/A','MG4F2ZP/A','MG4H2ZP/A','MG4J2ZP/A'];
 var cap128 = ['MGAC2ZP/A','MGAE2ZP/A','MGAF2ZP/A','MG4A2ZP/A','MG4C2ZP/A','MG4E2ZP/A'];
