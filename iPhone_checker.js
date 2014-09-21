@@ -176,6 +176,7 @@ function filter_model(phone_model, color, cap)
 // print the available iPhones at particular store
 function print_avail_avail(ret_json, store, target)
 {
+	console.log('----------------------------------');
 	for(var j = 0, len_j = store.length; j < len_j; j++)
 	{
 		var store_code = stores[store[j]];
