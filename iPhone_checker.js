@@ -5,7 +5,7 @@
 */
 var debug = 1;
 // the iReserve link we will keep track
-var loc = 'https://reserve.cdn-apple.com/HK/en_HK/reserve/iPhone/availability.json';
+var loc = document.location.origin + '/HK/en_HK/reserve/iPhone/availability.json';
 // translate the key part in availability.json into more meaningful variable
 // Thank you for Jimmy Sinn to prove the mapping
 var stores = {cb: 'R409', ifc: 'R428', fw: 'R485'};
